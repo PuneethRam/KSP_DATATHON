@@ -1,0 +1,184 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block content %}
+<html>
+<head>
+    <title>Stock Market</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #007bff;
+            color: #fff;
+            text-align: center;
+            padding: 30px 0;
+        }
+
+        nav {
+            background-color: #f0f0f0;
+            padding: 10px 20px;
+        }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        nav li {
+            margin-right: 20px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 1500px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .symptoms{
+            font-size=20px;
+        }
+
+        h1 {
+            color: #007bff;
+            text-align: center;
+        }
+
+        h2 {
+            color: #007bff;
+        }
+
+        p {
+            font-size:18px;
+            margin-bottom: 20px;
+        }
+        
+
+        img {
+            max-width: 100%;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1 style="color: #fff">Stock Market</h1>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#causes">Indicators</a></li>
+            <li><a href="#symptoms">Working</a></li>
+            <li><a href="#Doctor">Strategies</a></li>
+            <li><a href="#treatment">Treatement</a></li>
+            <li><a href="#Risk Factors">Trends</a></li>
+            <li><a href="#prevention">RiskFactors</a></li>
+            
+        </ul>
+    </nav>
+
+    <div class="container">
+        <section id="overview">
+            <h2>Stock Market Overview</h2>
+            <p>
+                The stock market, also known as the equity market or share market, is a platform where buyers and sellers trade stocks (shares) representing ownership claims in businesses. These stocks can include securities listed on public stock exchanges or those traded privately through equity crowdfunding platforms. Investors typically engage in trading with specific investment strategies.
+            </p>
+        </section>
+    
+        <section id="causes">
+            <h2>How the Stock Market Works</h2>
+            <p>
+                The stock market serves as a vital platform for companies to raise funds by offering ownership shares to investors. These shares, known as stocks, are sold on stock exchanges, enabling businesses to secure capital for expansion and operations without incurring debt. In return for this access to public funds, companies adhere to transparency and shareholder rights. Simultaneously, investors benefit from purchasing these stocks, as the companies' growth efforts lead to increased stock values and potential capital gains. Dividends are also distributed to shareholders as profits rise. Although individual stock performance varies, the stock market historically delivers average annual returns of around 10%, making it a dependable avenue for wealth accumulation.
+            </p>
+        </section>
+    
+        <section id="symptoms">
+            <h2>Market Indicators</h2>
+            <p>
+                A market indicator, also known as a financial indicator or stock market indicator, is a statistical or mathematical measurement used to assess the overall health, performance, and direction of a financial market, such as the stock market.These include:
+            </p>
+            <ul style="font-size: 18px;">
+                <li>Stock Market Indices: Stock market indices are vital benchmarks that represent the overall performance of a specific group of stocks. Widely followed indices include the S&P 500, which tracks 500 large U.S. companies, and the Dow Jones Industrial Average (DJIA), consisting of 30 major companies. These indices provide a snapshot of the market's direction and help investors gauge the general trend.</li>
+                <li>Volatility Index (VIX):The Volatility Index, commonly referred to as the VIX, measures market volatility and investor sentiment. Also known as the "fear gauge," the VIX reflects the market's expectation of future volatility. A higher VIX suggests greater market uncertainty and potential price fluctuations, while a lower VIX indicates more stable market conditions.</li>
+                <li>Trading Volume: Trading volume refers to the total number of shares traded within a specific timeframe, such as a day or week. It provides insights into market liquidity and investor participation. Higher trading volume often accompanies significant price movements, reflecting increased buying or selling pressure.</li>
+                <li>Market Capitalization: Market capitalization (market cap) is the total value of a company's outstanding shares of stock. It's calculated by multiplying the stock's current price by the total number of shares. Market cap categorizes companies into different size segments: large-cap, mid-cap, and small-cap. Market cap reflects the perceived size and significance of a company within the market.</li>
+                <!-- Add more market indicators here -->
+            </ul>
+        </section>
+    
+        <section id="Doctor">
+            <h2>Investment Strategies</h2>
+            <p>
+                Investors use various strategies to navigate the stock market, including:
+            </p>
+            <ul style="font-size: 18px;">
+                <li>Value Investing: Seeking undervalued stocks with potential for growth.</li>
+                <li>Growth Investing: Investing in companies with strong growth prospects.</li>
+                <li>Income Investing: Focusing on dividend-paying stocks for regular income.</li>
+                <li>Day Trading: Buying and selling stocks within the same trading day.</li>
+                <!-- Add more investment strategies here -->
+            </ul>
+        </section>
+    
+        <section id="treatment">
+            <h2>Market Trends and Risks</h2>
+            <p>
+                The stock market is subject to trends and risks that influence its behavior:
+            </p>
+            <ul style="font-size: 18px;">
+                <li>Bull and Bear Markets: Periods of rising and falling stock prices.</li>
+                <li>Economic Indicators: Factors like GDP, unemployment, and inflation impact market sentiment.</li>
+                <li>Geopolitical Events: Political and global events can cause market fluctuations.</li>
+                <li>Company Earnings Reports: Quarterly reports influence stock prices.</li>
+                <!-- Add more market trends and risks here -->
+            </ul>
+        </section>
+    
+        <section id="Risk Factors">
+            <h2>Risk and Reward</h2>
+            <p>
+                Investing in the stock market involves balancing risk and potential reward:
+            </p>
+            <ul style="font-size: 18px;">
+                <li>Higher Potential Returns: Stocks offer potential for higher returns compared to safer investments.</li>
+                <li>Market Volatility: Stock prices can be volatile, leading to potential losses.</li>
+                <li>Diversification: Spreading investments across stocks and sectors can mitigate risk.</li>
+                <li>Long-Term Perspective: Long-term investors may benefit from market growth over time.</li>
+                <!-- Add more risk and reward factors here -->
+            </ul>
+        </section>
+    
+        <!-- <section id="prevention">
+            <h2>Education and Preparedness</h2>
+            <p>
+                Educating oneself and being prepared are key to successful stock market participation:
+            </p>
+            <ul style="font-size: 18px;">
+                <li>Research: Understand companies, industries, and market trends before investing.</li>
+                <li>Financial Goals: Align investments with your financial goals and risk tolerance.</li>
+                <li>Professional Advice: Consider consulting financial advisors for personalized guidance.</li>
+                <li>Emotional Discipline: Avoid making impulsive decisions based on market fluctuations.</li>
+                
+            </ul>
+        </section> -->
+    </div>
+    
+</body>
+</html>
+{% endblock content %}

@@ -1,0 +1,560 @@
+map_html_path = '' 
+import folium
+from folium.plugins import MarkerCluster
+
+if request.method == 'POST':
+    district = request.POST.get('district')
+    type = request.POST.get('type')
+  
+    a=pd.read_csv(r'home\datasets\FINAL_KARNATAKA_DATA.csv')
+    districts_to_keep = [district]
+    filtered_data = a[a['DISTRICTNAME'].isin(districts_to_keep)]
+    filtered_data.to_csv(r'home\datasets\dataset.csv', index=False)
+
+
+    df=pd.read_csv(r'home\datasets\dataset.csv')
+    if type=="Cause":
+        # Create a map object
+        m = folium.Map(location=[12.2958, 76.6394], zoom_start=10)
+
+        # Create separate MarkerCluster layers for each cause of the accident
+        human_error_cluster = MarkerCluster(name='Human Error', control=False).add_to(m)
+        vehicle_defect_cluster = MarkerCluster(name='Vehicle Defect', control=False).add_to(m)
+        not_applicable_cluster = MarkerCluster(name='Not Applicable', control=False).add_to(m)
+        road_defect_cluster = MarkerCluster(name='Road Environment Defect', control=False).add_to(m)
+
+        # Define icon URLs
+        orange_url = 'https://images.emojiterra.com/google/android-12l/512px/1f7e0.png'
+        yellow_url = 'https://www.pngall.com/wp-content/uploads/15/Yellow-Circle-No-Background.png'
+        green_url = 'https://png.pngtree.com/png-vector/20220523/ourmid/pngtree-green-circle-button-on-white-background-push-modern-paper-vector-png-image_13628152.png'
+        human_icon_url = 'https://cdn-icons-png.freepik.com/256/10/10522.png'
+        vehicle_icon_url = 'https://cdn-icons-png.freepik.com/512/310/310742.png'
+        not_applicable_icon_url = 'https://static-00.iconduck.com/assets.00/warning-icon-2048x2048-wfo0sck3.png'
+
+        # road_defect_icon_url = 'https://png.pngtree.com/png-clipart/20221228/original/pngtree-fault-sign-png-image_8817270.png'
+        road_defect_icon_url = 'https://static-00.iconduck.com/assets.00/unpaved-road-icon-2046x2048-h5paxc1b.png'
+
+
+        # Define icons for legend
+        legend_icons = {
+            'Be Alert (<10)' : 'https://images.emojiterra.com/google/android-12l/512px/1f7e0.png',
+            'Accident Prone (10-100)' : 'https://www.pngall.com/wp-content/uploads/15/Yellow-Circle-No-Background.png',
+            'Red Zone (>100)' : 'https://png.pngtree.com/png-vector/20220523/ourmid/pngtree-green-circle-button-on-white-background-push-modern-paper-vector-png-image_13628152.png',
+            'Human Error': 'https://cdn-icons-png.freepik.com/256/10/10522.png',
+            'Vehicle Defect': 'https://cdn-icons-png.freepik.com/512/310/310742.png',
+            'Not Applicable': 'https://static-00.iconduck.com/assets.00/warning-icon-2048x2048-wfo0sck3.png',
+            'Road Environment Defect': 'https://static-00.iconduck.com/assets.00/unpaved-road-icon-2046x2048-h5paxc1b.png'
+
+        }
+
+
+        # Create legend HTML
+        legend_html = """
+        <div style="
+            position: fixed;
+            bottom: 50px;
+            left: 50px;
+            width: 300px;
+            height: auto;
+            background-color: #ffffff;
+            border: 2px solid #cccccc;
+            border-radius: 5px;
+            padding: 10px;
+            z-index: 1000;
+            font-size: 16px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        ">
+
+            <!-- First set of legends -->
+            <div style="margin-top: 10px;">
+                <p style="font-weight: bold; margin-bottom: 5px;text-align: center;">Number of Accidents</p>
+                <div style="margin-top: 5px;">
+                    <span style="display: inline-block; width: 20px; height: 20px; background-color: green; margin-right: 5px;"></span>
+                    <span style="font-weight: bold;">Be alert:</span> Less than 10
+                </div>
+                <div style="margin-top: 5px;">
+                    <span style="display: inline-block; width: 20px; height: 20px; background-color: yellow; margin-right: 5px;"></span>
+                    <span style="font-weight: bold;">Accident Prone:</span> 10 to 100
+                </div>
+                <div style="margin-top: 5px;">
+                    <span style="display: inline-block; width: 20px; height: 20px; background-color: orange; margin-right: 5px;"></span>
+                    <span style="font-weight: bold;">Danger Zone:</span> Greater than 100
+                </div>
+            </div>
+
+          <div style="position: fixed; top: 10px; right: 10px; z-index: 1000; background-color: #fff; border: 2px solid #ccc; border-radius: 5px; padding: 10px;">
+            <p style="font-weight: bold;">Main Cause </p>
+            <div style="margin-top: 5px;">
+                <img src="https://cdn-icons-png.freepik.com/256/10/10522.png" style="width: 20px; height: 20px; margin-right: 5px;">
+                <span style="font-weight: bold;">Human Error</span>
+            </div>
+            <div style="margin-top: 5px;">
+                <img src="https://cdn-icons-png.freepik.com/512/310/310742.png" style="width: 20px; height: 20px; margin-right: 5px;">
+                <span style="font-weight: bold;">Vehicle Defect</span>
+            </div>
+            <div style="margin-top: 5px;">
+                <img src="https://static-00.iconduck.com/assets.00/unpaved-road-icon-2046x2048-h5paxc1b.png" style="width: 20px; height: 20px; margin-right: 5px;">
+                <span style="font-weight: bold;">Road Environment Defect</span>
+            </div>
+            <div style="margin-top: 5px;">
+                <img src="https://static-00.iconduck.com/assets.00/warning-icon-2048x2048-wfo0sck3.png" style="width: 20px; height: 20px; margin-right: 5px;">
+                <span style="font-weight: bold;">Other Reasons</span>
+            </div>
+        </div>
+        """
+
+        # for cause, icon_url in legend_icons.items():
+        #     legend_html += f"""
+        #     <p style="margin: 5px 0;"><img src="{icon_url}" style="width: 20px; height: 20px; margin-right: 5px;">{cause}</p>
+        # """
+
+
+
+        legend_html += """
+        </div>
+        """
+
+        # Add legend as a custom control
+        m.get_root().html.add_child(folium.Element(legend_html))
+
+        # Iterate through the DataFrame and add markers to the appropriate cluster
+        for index, row in df.iterrows():
+            # Determine the cause of the accident
+            cause = row['Main_Cause']
+
+            # Set the icon and cluster based on the cause
+            if cause == 'Human Error':
+                icon = folium.features.CustomIcon(human_icon_url, icon_size=(30, 30))
+                cluster = human_error_cluster
+            elif cause == 'Vehicle Defect':
+                icon = folium.features.CustomIcon(vehicle_icon_url, icon_size=(30, 30))
+                cluster = vehicle_defect_cluster
+            elif cause == 'Not Applicable':
+                icon = folium.features.CustomIcon(not_applicable_icon_url, icon_size=(30, 30))
+                cluster = not_applicable_cluster
+            elif cause == 'Road Environment Defect':
+                icon = folium.features.CustomIcon(road_defect_icon_url, icon_size=(30, 30))
+                cluster = road_defect_cluster
+            else:
+                continue  # Skip unknown causes
+
+            # Add marker to the appropriate cluster
+            # folium.Marker(location=[row['Latitude'], row['Longitude']], icon=icon).add_to(cluster)
+            folium.Marker(location=[row['Latitude'], row['Longitude']], icon=icon, tooltip=cause).add_to(cluster)
+
+        # Add layer control to toggle between clusters
+        folium.LayerControl(collapsed=False).add_to(m)
+
+        # Save the map as an HTML file
+        map_html_path = r'static\assets\maps\factor_map.html'
+        m.save(map_html_path)
+    
+
+    elif type=="severity":
+       
+        # Create a map object
+        m = folium.Map(location=[12.2958, 76.6394], zoom_start=10)
+        # Create separate MarkerCluster layers for each cause of the accident
+        Damage_Only_cluster = MarkerCluster(name='Damage Only', control=False).add_to(m)
+        simple_injury_cluster = MarkerCluster(name='Simple Injury', control=False).add_to(m)
+        not_applicable_cluster = MarkerCluster(name='Not Applicable', control=False).add_to(m)
+        Grievous_Injury_cluster = MarkerCluster(name='Grievous Injury', control=False).add_to(m)
+        Fatal_cluster = MarkerCluster(name='Fatal', control=False).add_to(m)
+
+        # Define icon URLs
+        orange_url = 'https://images.emojiterra.com/google/android-12l/512px/1f7e0.png'
+        yellow_url = 'https://www.pngall.com/wp-content/uploads/15/Yellow-Circle-No-Background.png'
+        green_url = 'https://png.pngtree.com/png-vector/20220523/ourmid/pngtree-green-circle-button-on-white-background-push-modern-paper-vector-png-image_13628152.png'
+        fatal_url = 'https://static.thenounproject.com/png/53747-200.png'
+        grievous_injury_url = 'https://cdn-icons-png.flaticon.com/512/6098/6098835.png'
+        damage_url = 'https://icons.veryicon.com/png/o/internet--web/collection-and-payment/damage.png'
+        simple_injury_url = 'https://icon-library.com/images/injury-icon/injury-icon-2.jpg'
+        not_applicable_icon_url = 'https://static-00.iconduck.com/assets.00/warning-icon-2048x2048-wfo0sck3.png'
+
+        # road_defect_icon_url = 'https://png.pngtree.com/png-clipart/20221228/original/pngtree-fault-sign-png-image_8817270.png'
+        road_defect_icon_url = 'https://static-00.iconduck.com/assets.00/unpaved-road-icon-2046x2048-h5paxc1b.png'
+
+
+        # Define icons for legend
+        legend_icons = {
+            'Be Alert (<10)' : 'https://images.emojiterra.com/google/android-12l/512px/1f7e0.png',
+            'Accident Prone (10-100)' : 'https://www.pngall.com/wp-content/uploads/15/Yellow-Circle-No-Background.png',
+            'Red Zone (>100)' : 'https://png.pngtree.com/png-vector/20220523/ourmid/pngtree-green-circle-button-on-white-background-push-modern-paper-vector-png-image_13628152.png',
+            'fatal_url' : 'https://static.thenounproject.com/png/53747-200.png',
+        'grievous_injury_url' : 'https://cdn-icons-png.flaticon.com/512/6098/6098835.png',
+        'damage_url' : 'https://icons.veryicon.com/png/o/internet--web/collection-and-payment/damage.png',
+        'simple_injury_url' : 'https://icon-library.com/images/injury-icon/injury-icon-2.jpg',
+        'not_applicable_icon_url' : 'https://static-00.iconduck.com/assets.00/warning-icon-2048x2048-wfo0sck3.png'
+
+        }
+
+
+        # Create legend HTML
+        legend_html = """
+        <div style="
+            position: fixed;
+            bottom: 50px;
+            left: 50px;
+            width: 300px;
+            height: auto;
+            background-color: #ffffff;
+            border: 2px solid #cccccc;
+            border-radius: 5px;
+            padding: 10px;
+            z-index: 1000;
+            font-size: 16px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        ">
+
+            <!-- First set of legends -->
+            <div style="margin-top: 10px;">
+                <p style="font-weight: bold; margin-bottom: 5px;text-align: center;">Number of Accidents</p>
+                <div style="margin-top: 5px;">
+                    <span style="display: inline-block; width: 20px; height: 20px; background-color: green; margin-right: 5px;"></span>
+                    <span style="font-weight: bold;">Be alert:</span> Less than 10
+                </div>
+                <div style="margin-top: 5px;">
+                    <span style="display: inline-block; width: 20px; height: 20px; background-color: yellow; margin-right: 5px;"></span>
+                    <span style="font-weight: bold;">Accident Prone:</span> 10 to 100
+                </div>
+                <div style="margin-top: 5px;">
+                    <span style="display: inline-block; width: 20px; height: 20px; background-color: orange; margin-right: 5px;"></span>
+                    <span style="font-weight: bold;">Danger Zone:</span> Greater than 100
+                </div>
+            </div>
+
+
+          <div style="position: fixed; top: 10px; right: 10px; z-index: 1000; background-color: #fff; border: 2px solid #ccc; border-radius: 5px; padding: 10px;">
+            <p style="font-weight: bold;">Severity</p>
+            <div style="margin-top: 5px;">
+            <img src="https://icons.veryicon.com/png/o/internet--web/collection-and-payment/damage.png" style="width: 20px; height: 20px; margin-right: 5px;">
+                <span style="font-weight: bold;"></span> Damage Only
+
+            </div>
+            <div style="margin-top: 5px;">
+                  <img src="https://icon-library.com/images/injury-icon/injury-icon-2.jpg" style="width: 20px; height: 20px; margin-right: 5px;">
+                <span style="font-weight: bold;"></span> Simple Injury
+            </div>
+            <div style="margin-top: 5px;">
+                <img src="https://cdn-icons-png.flaticon.com/512/6098/6098835.png" style="width: 20px; height: 20px; margin-right: 5px;">
+                <span style="font-weight: bold;"></span> Grievous Injury
+            </div>
+            <div style="margin-top: 5px;">
+                <img src="https://static.thenounproject.com/png/53747-200.png" style="width: 20px; height: 20px; margin-right: 5px;">
+                <span style="font-weight: bold;"></span> Fatal Injury
+            </div>
+            <div style="margin-top: 5px;">
+                <img src="https://static-00.iconduck.com/assets.00/warning-icon-2048x2048-wfo0sck3.png" style="width: 20px; height: 20px; margin-right: 5px;">
+                <span style="font-weight: bold;"></span> Other Reasons
+            </div>
+        </div>
+        """
+
+        # for cause, icon_url in legend_icons.items():
+        #     legend_html += f"""
+        #     <p style="margin: 5px 0;"><img src="{icon_url}" style="width: 20px; height: 20px; margin-right: 5px;">{cause}</p>
+        # """
+
+
+
+        legend_html += """
+        </div>
+        """
+
+        # Add legend as a custom control
+        m.get_root().html.add_child(folium.Element(legend_html))
+
+        # Iterate through the DataFrame and add markers to the appropriate cluster
+        for index, row in df.iterrows():
+            # Determine the severity
+            cause = row['Severity']
+
+
+            # Set the icon and cluster based on the cause
+            if cause == 'Simple Injury':
+                icon = folium.features.CustomIcon(simple_injury_url, icon_size=(45, 45))
+                cluster = simple_injury_cluster
+            elif cause == 'Grievous Injury':
+                icon = folium.features.CustomIcon(grievous_injury_url, icon_size=(45, 45))
+                cluster = Grievous_Injury_cluster
+            elif cause == 'Not Applicable':
+                icon = folium.features.CustomIcon(not_applicable_icon_url, icon_size=(30, 30))
+                cluster = not_applicable_cluster
+            elif cause == 'Damage Only':
+                icon = folium.features.CustomIcon(damage_url, icon_size=(45, 45))
+                cluster = Damage_Only_cluster
+            elif cause == 'Fatal':
+                icon = folium.features.CustomIcon(fatal_url, icon_size=(45, 45))
+                cluster = Fatal_cluster
+            else:
+                continue  # Skip unknown causes
+
+            # Add marker to the appropriate cluster
+            # folium.Marker(location=[row['Latitude'], row['Longitude']], icon=icon).add_to(cluster)
+            folium.Marker(location=[row['Latitude'], row['Longitude']], icon=icon, tooltip=cause).add_to(cluster)
+
+        # Add layer control to toggle between clusters
+        folium.LayerControl(collapsed=False).add_to(m)
+
+        # Save the map as an HTML file
+        map_html_path = r'static\assets\maps\factor_map.html'
+    
+        m.save(map_html_path)
+
+    elif type=="weather":
+        m = folium.Map(location=[12.2958, 76.6394], zoom_start=10)
+
+        clear_conditions = ['Clear', 'Fine', 'Very Hot']
+        cloudy_conditions = ['Cloudy']
+        wind_conditions = ['Wind', 'Dust Storm']
+        rain_conditions = ['Light Rain', 'Heavy Rain', 'Flooding of Slipways/Rivulets']
+        snow_conditions = ['Mist or Fog', 'Hail or Sleet', 'Very Cold']
+        other_conditions = ['Not Applicable']
+
+        # Create separate MarkerCluster layers for each condition
+        clear_cluster_1 = MarkerCluster(name='Clear', control=False).add_to(m)
+        cloudy_cluster_2 = MarkerCluster(name='Cloudy', control=False).add_to(m)
+        wind_cluster_6 = MarkerCluster(name='Wind', control=False).add_to(m)
+        rain_cluster_3= MarkerCluster(name='Rain', control=False).add_to(m)
+        Snow_cluster_4 = MarkerCluster(name='Snow', control=False).add_to(m)
+        Others_cluster_5 = MarkerCluster(name='Other', control=False).add_to(m)
+
+
+        # Define icon URLs
+        orange_url = 'https://images.emojiterra.com/google/android-12l/512px/1f7e0.png'
+        yellow_url = 'https://www.pngall.com/wp-content/uploads/15/Yellow-Circle-No-Background.png'
+        green_url = 'https://png.pngtree.com/png-vector/20220523/ourmid/pngtree-green-circle-button-on-white-background-push-modern-paper-vector-png-image_13628152.png'
+        clear_url = 'https://cdn-icons-png.flaticon.com/512/3222/3222807.png'
+        cloudy_url = 'https://cdn-icons-png.flaticon.com/512/1163/1163736.png'
+        rain_url = 'https://cdn-icons-png.freepik.com/512/4150/4150897.png'
+        snow_url = 'https://cdn-icons-png.flaticon.com/512/2834/2834547.png'
+        not_applicable_icon_url = 'https://static-00.iconduck.com/assets.00/warning-icon-2048x2048-wfo0sck3.png'
+        wind_url = 'https://cdn-icons-png.flaticon.com/512/3104/3104631.png'
+
+
+
+        # Define icons for legend
+        legend_icons = {
+            'Be Alert (<10)' : 'https://images.emojiterra.com/google/android-12l/512px/1f7e0.png',
+            'Accident Prone (10-100)' : 'https://www.pngall.com/wp-content/uploads/15/Yellow-Circle-No-Background.png',
+            'Red Zone (>100)' : 'https://png.pngtree.com/png-vector/20220523/ourmid/pngtree-green-circle-button-on-white-background-push-modern-paper-vector-png-image_13628152.png',
+        'clear_url' : 'https://cdn-icons-png.flaticon.com/512/3222/3222807.png',
+        'cloudy_url' : 'https://cdn-icons-png.flaticon.com/512/1163/1163736.png',
+        'rain_url' : 'https://cdn-icons-png.freepik.com/512/4150/4150897.png',
+        'snow_url' : 'https://cdn-icons-png.flaticon.com/512/2834/2834547.png',
+        'not_applicable_icon_url' : 'https://static-00.iconduck.com/assets.00/warning-icon-2048x2048-wfo0sck3.png',
+        'wind_url': 'https://cdn-icons-png.flaticon.com/512/3104/3104631.png'
+        }
+
+
+        # Create legend HTML
+        legend_html = """
+        <div style="
+            position: fixed;
+            bottom: 50px;
+            left: 50px;
+            width: 300px;
+            height: auto;
+            background-color: #ffffff;
+            border: 2px solid #cccccc;
+            border-radius: 5px;
+            padding: 10px;
+            z-index: 1000;
+            font-size: 16px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        ">
+
+            <!-- First set of legends -->
+            <div style="margin-top: 10px;">
+                <p style="font-weight: bold; margin-bottom: 5px;text-align: center;">Number of Accidents</p>
+                <div style="margin-top: 5px;">
+                    <span style="display: inline-block; width: 20px; height: 20px; background-color: green; margin-right: 5px;"></span>
+                    <span style="font-weight: bold;">Be alert:</span> Less than 10
+                </div>
+                <div style="margin-top: 5px;">
+                    <span style="display: inline-block; width: 20px; height: 20px; background-color: yellow; margin-right: 5px;"></span>
+                    <span style="font-weight: bold;">Accident Prone:</span> 10 to 100
+                </div>
+                <div style="margin-top: 5px;">
+                    <span style="display: inline-block; width: 20px; height: 20px; background-color: orange; margin-right: 5px;"></span>
+                    <span style="font-weight: bold;">Danger Zone:</span> Greater than 100
+                </div>
+            </div>
+
+
+
+          <div style="position: fixed; top: 10px; right: 10px; z-index: 1000; background-color: #fff; border: 2px solid #ccc; border-radius: 5px; padding: 10px;">
+            <p style="font-weight: bold;">Weather Conditions</p>
+            <div style="margin-top: 5px;">
+            <img src="https://cdn-icons-png.flaticon.com/512/3222/3222807.png" style="width: 20px; height: 20px; margin-right: 5px;">
+                <span style="font-weight: bold;"></span> Clear Sky
+
+            </div>
+            <div style="margin-top: 5px;">
+                  <img src="https://cdn-icons-png.flaticon.com/512/1163/1163736.png" style="width: 20px; height: 20px; margin-right: 5px;">
+                <span style="font-weight: bold;"></span> Cloudy
+            </div>
+            <div style="margin-top: 5px;">
+                <img src="https://cdn-icons-png.freepik.com/512/4150/4150897.png" style="width: 20px; height: 20px; margin-right: 5px;">
+                <span style="font-weight: bold;"></span> Rainy
+            </div>
+            <div style="margin-top: 5px;">
+                <img src="https://cdn-icons-png.flaticon.com/512/2834/2834547.png" style="width: 20px; height: 20px; margin-right: 5px;">
+                <span style="font-weight: bold;"></span> Snow or Fog
+            </div>
+            <div style="margin-top: 5px;">
+                <img src="https://cdn-icons-png.flaticon.com/512/3104/3104631.png" style="width: 20px; height: 20px; margin-right: 5px;">
+                <span style="font-weight: bold;"></span> Windy
+            </div>
+            <div style="margin-top: 5px;">
+                <img src="https://static-00.iconduck.com/assets.00/warning-icon-2048x2048-wfo0sck3.png" style="width: 20px; height: 20px; margin-right: 5px;">
+                <span style="font-weight: bold;"></span> Other Reasons
+            </div>
+        </div>
+        """
+
+        # for cause, icon_url in legend_icons.items():
+        #     legend_html += f"""
+        #     <p style="margin: 5px 0;"><img src="{icon_url}" style="width: 20px; height: 20px; margin-right: 5px;">{cause}</p>
+        # """
+
+
+
+        legend_html += """
+        </div>
+        """
+
+        # Add legend as a custom control
+        m.get_root().html.add_child(folium.Element(legend_html))
+
+        # Iterate through the DataFrame and add markers to the appropriate cluster
+        for index, row in df.iterrows():
+            # Determine the severity
+            cause = row['Weather']
+
+
+            # Set the icon and cluster based on the cause
+            if cause == 'Clear' or cause== 'Fine' or cause=='Very Hot':
+                icon = folium.features.CustomIcon(clear_url, icon_size=(45, 45))
+                cluster = clear_cluster_1
+            elif cause == 'Cloudy':
+                icon = folium.features.CustomIcon(cloudy_url, icon_size=(45, 45))
+                cluster = cloudy_cluster_2
+            elif cause == 'Wind' or cause =='Dust Storm':
+                icon = folium.features.CustomIcon(wind_url, icon_size=(30, 30))
+                cluster = wind_cluster_6
+            elif cause == 'Light Rain' or cause == 'Heavy Rain' or cause == 'Flooding of Slipways/Rivulets':
+                icon = folium.features.CustomIcon(rain_url, icon_size=(45, 45))
+                cluster = rain_cluster_3
+            elif cause == 'Mist or Fog' or 'Hail or Sleet' or 'Very Cold':
+                icon = folium.features.CustomIcon(snow_url, icon_size=(45, 45))
+                cluster = Snow_cluster_4
+            elif cause == 'Not Applicable':
+                icon = folium.features.CustomIcon(not_applicable_icon_url, icon_size=(45, 45))
+                cluster = Others_cluster_5
+            else:
+                continue  # Skip unknown causes
+
+            # Add marker to the appropriate cluster
+            # folium.Marker(location=[row['Latitude'], row['Longitude']], icon=icon).add_to(cluster)
+            folium.Marker(location=[row['Latitude'], row['Longitude']], icon=icon, tooltip=cause).add_to(cluster)
+
+        # Add layer control to toggle between clusters
+        folium.LayerControl(collapsed=False).add_to(m)
+
+        # Save the map as an HTML file
+        map_html_path = r'static\assets\maps\factor_map.html'
+    
+        m.save(map_html_path)   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        starttime = pd.to_datetime(request.POST.get('starttime'))
+        endtime = pd.to_datetime(request.POST.get('endtime'))
+
+        karnataka_map = folium.Map(location=[12.9716, 77.5946], zoom_start=7)
+        custom_icon_create_function = """
+        function(cluster) {
+            var markers = cluster.getAllChildMarkers();
+            var childCount = markers.length;
+            var size = 'small';
+            
+            // Adjust icon size dynamically based on the label value
+            var width = Math.min(40 + childCount * 2, 150);  // Limit maximum size to 100 pixels
+            var height = width;  // Make the height the same as the width
+            
+            if (childCount < 5) {
+                size = 'tiny';
+            } else if (childCount < 20) {
+                size = 'small';
+            } else if (childCount < 100 ) {
+                size = 'medium-small';
+            } else if (childCount < 200) {
+                size = 'medium';
+            } else if (childCount < 500) {
+                size = 'medium-large';
+            } else if (childCount < 600) {
+                size = 'large';
+            } else {
+                size = 'extra-large';
+            }
+            
+            var opacity = 1.0;  // Default opacity
+            
+            // Adjust opacity based on the cluster size
+            if (size === 'large')  {
+                opacity = 0.3;  // Minimum transparency for large and extra-large clusters
+            } else if (size === 'extra-large') {
+                opacity = 0.4;
+            } else if (size === 'medium')  {
+                opacity = 0.45;  // Medium transparency for medium and medium-large clusters
+            } else if(size === 'medium-large') {
+                opacity = 0.5; 
+            } else {
+                opacity = 0.6;  // Default transparency for other cluster sizes
+            }
+            
+            var html = '<div style="background-color: rgba(255, 0, 0, ' + opacity + '); color: white; border-radius: 50%; border: 1px solid white; width: ' + width + 'px; height: ' + height + 'px; text-align: center; line-height: ' + height + 'px;">' + childCount + '</div>';
+
+            return L.divIcon({
+                html: html,
+                className: 'marker-cluster',
+                iconSize: [width, height]
+            });
+        }
+        """
+
+
+        # Create a MarkerCluster layer with the custom icon creation function
+        marker_cluster = MarkerCluster(icon_create_function=custom_icon_create_function).add_to(karnataka_map)
+
+        for index, row in df.iterrows():
+            lat, lon = row['Latitude'], row['Longitude']
+            time = pd.to_datetime(row['Time'])  # Assuming 'Time' column contains datetime objects
+
+            # Check if the time of the data point falls within the specified range
+            if starttime <= time <= endtime:
+                # Create a custom icon for the marker
+                icon = folium.Icon(color='red', icon='exclamation-triangle', prefix='fa')
+
+                # Create a popup message for the marker
+                popup_text = f"Accident Spot: {row['Accident_Spot']}\nAccident SubLocation: {row['Accident_SubLocation']}\nSeverity: {row['Severity']}"
+
+                # Create a marker with the custom icon and add it to the MarkerCluster layer
+                folium.Marker([lat, lon], popup=popup_text, icon=icon).add_to(marker_cluster)
+
+        map_html_path = r'static\assets\maps\mysore_maps_time.html'
+        karnataka_map.save(map_html_path)

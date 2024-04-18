@@ -1,0 +1,209 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<html>
+<head>
+    <title>Stock Market</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #007bff;
+            color: #fff;
+            text-align: center;
+            padding: 30px 0;
+        }
+
+        nav {
+            background-color: #f0f0f0;
+            padding: 10px 20px;
+        }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        nav li {
+            margin-right: 20px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 1500px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .symptoms{
+            font-size=20px;
+        }
+
+        h1 {
+            color: #007bff;
+            text-align: center;
+        }
+
+        h2 {
+            color: #007bff;
+        }
+
+        p {
+            font-size:18px;
+            margin-bottom: 20px;
+        }
+        
+
+        img {
+            max-width: 100%;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1 style="color: #fff">Forex Market</h1>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#causes">Working</a></li>
+            <li><a href="#symptoms">Types</a></li>
+            <li><a href="#Doctor">Strategies</a></li>
+            <li><a href="#treatment">Charts</a></li>
+            
+
+            
+        </ul>
+    </nav>
+
+    <div class="container">
+        <section id="overview">
+            <h2>Forex Market Overview</h2>
+            <p>
+                Forex (FX) is a portmanteau of the words foreign [currency] and exchange. Foreign exchange is the process of changing one currency into another for various reasons, usually for commerce, trading, or tourism. According to a 2022 triennial report from the Bank for International Settlements (a global bank for national central banks), the daily global volume for forex trading reached $7.5 trillion in 2022
+            </p>
+            <p>
+                The foreign exchange market is where currencies are traded. This international market's most unique aspect is that it lacks a central marketplace. Instead, currency trading is conducted electronically over the counter (OTC). This means that all transactions occur via computer networks among traders worldwide rather than on one centralized exchange.
+            </p>
+        </section>
+    
+        <section id="causes">
+            <h2>How Does the Forex Market Work?</h2>
+            <p>
+                The FX market is the only truly continuous and nonstop trading market in the world. In the past, the forex market was dominated by institutional firms and large banks, which acted on behalf of clients. But it has become more retail-oriented in recent years—traders and investors of all sizes participate in it.
+            </p>
+        </section>
+    
+        <section id="symptoms">
+            <h2>Types of Markets</h2>
+            <p>
+                Forex is traded primarily via spot, forwards, and futures markets. The spot market is the largest of all three markets because it is the “underlying” asset on which forwards and futures markets are based. When people talk about the forex market, they are usually referring to the spot market.
+
+The forwards and futures markets tend to be more popular with companies or financial firms that need to hedge their foreign exchange risks out to a specific future date.
+            </p>
+            <h3>Spot Market</h3>
+            <p>
+                The spot market is where currencies are bought and sold based on their trading price. That price is determined by supply and demand and is calculated based on several factors, such as:
+            </p>
+            <ul style="font-size: 18px;">
+                <li>Current interest rates</li>
+                <li>Economic performance</li>
+                <li>Geopolitical sentiment</li>
+                <li>Price speculation</li>
+                
+            </ul>
+            <h3>Forwards and Futures Markets</h3>
+            <p>
+                A forward contract is a private agreement between two parties to buy a currency at a future date and a predetermined price in the OTC markets. In the forwards market, contracts are bought and sold OTC between two parties, who determine the terms of the agreement between themselves.
+            </p>
+            <p>
+                A futures contract is a standardized agreement between two parties to take delivery of a currency at a future date and a predetermined price. Futures trade on exchanges and not OTC. In the futures market, futures contracts are bought and sold based on a standard size and settlement date on public commodities markets, such as the Chicago Mercantile Exchange (CME).
+            </p>
+            <p>
+                Futures contracts have specific details, including the number of units being traded, delivery and settlement dates, and minimum price increments that cannot be customized. The exchange acts as a counterparty to the trader, providing clearance and settlement services.
+            </p>
+
+            
+        </section>
+    
+        <section id="Doctor">
+            <h2>Basic Forex Trading Strategies</h2>
+            <p>
+                The most basic forms of forex trades are long and short trades. In a long trade, the trader is betting that the currency price will increase and that they can profit from it. A short trade consists of a bet that the currency pair’s price will decrease. Traders can also use trading strategies based on technical analysis, such as breakout and moving averages, to fine-tune their approach to trading.Depending on the duration and numbers for trading, trading strategies can be categorized into four further types:
+            </p>
+            <ul style="font-size: 18px;">
+                <li>Scalp Trade:A scalp trade consists of cumulative positions held for seconds or minutes at most, and the profit amounts are restricted in terms of the number of pips.</li>
+                <li>Day Trade:Day trades are short-term trades in which positions are held and liquidated on the same day. The duration of a day trade can be hours or minutes.</li>
+                <li>Swing trade:In a swing trade, the trader holds the position for a period longer than a day, like days or weeks.</li>
+                <li>Position trade:In a position trade, the trader holds the currency for a long period, lasting as long as months or even years.</li>
+            </ul>
+
+        </section>
+    
+        <section id="treatment">
+            <h2>Charts Used in Forex Trading</h2>
+            <p>
+                Three types of charts are used in forex trading. They are:
+            </p>
+            <ul style="font-size: 18px;">
+                <li>Line Charts:Line charts are used to identify big-picture trends for a currency. They are the most basic and common type of chart used by forex traders. They display the closing trading price for a currency for the periods specified by the user. The trend lines identified in a line chart can be used to devise trading strategies.</li>
+                <li>
+                    Bar Charts:Bar charts offer detailed price information with OHLC (opening, highest, lowest, and closing) data for each trading day, using dashes to show opening and closing prices, and color-coding (green/white for rising, red/black for declining) to represent price movement.
+                </li>
+                <li>Candlestick Charts:
+                    Candlestick charts, introduced by Japanese rice traders in the 18th century, visually depict price trends with the upper portion representing opening and highest prices, and the lower part indicating closing and lowest prices, using color-coded candles (red/black for decline, green/white for rise) to signify market movement. They utilize formations like hanging man and shooting star to determine market direction.</li>
+                
+            </ul>
+        </section>
+    
+        <!-- <section id="Risk Factors">
+            <h2>Risk and Reward</h2>
+            <p>
+                Investing in the stock market involves balancing risk and potential reward:
+            </p>
+            <ul style="font-size: 18px;">
+                <li>Higher Potential Returns: Stocks offer potential for higher returns compared to safer investments.</li>
+                <li>Market Volatility: Stock prices can be volatile, leading to potential losses.</li>
+                <li>Diversification: Spreading investments across stocks and sectors can mitigate risk.</li>
+                <li>Long-Term Perspective: Long-term investors may benefit from market growth over time.</li>
+                
+        </section> -->
+    
+        <!-- <section id="prevention">
+            <h2>Education and Preparedness</h2>
+            <p>
+                Educating oneself and being prepared are key to successful stock market participation:
+            </p>
+            <ul style="font-size: 18px;">
+                <li>Research: Understand companies, industries, and market trends before investing.</li>
+                <li>Financial Goals: Align investments with your financial goals and risk tolerance.</li>
+                <li>Professional Advice: Consider consulting financial advisors for personalized guidance.</li>
+                <li>Emotional Discipline: Avoid making impulsive decisions based on market fluctuations.</li>
+                
+            </ul>
+        </section> -->
+    </div>
+    
+</body>
+</html>
+
+{% endblock content %}

@@ -1,0 +1,367 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% load i18n static admin_datta %}
+{% block content %}
+
+<!-- analysis.html -->
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <title>Analysis</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+        .card {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            margin: 20px 0;
+        }
+        
+        
+
+        .header {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        
+    </style>
+</head>
+<div class="container mt-4">
+    <div class="row">
+        <div class="card">
+            <h4 class="header">Overall Analysis</h4>
+
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div id="container-column"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div id="container-stacked"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div id="container-pie"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div id="container-inversebar"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div id="container-stacked2"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+
+<script>
+    Highcharts.chart('container-column', {
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Accident Analysis',
+            align: 'left'
+        },
+        xAxis: {
+            categories:  [ '2016','2017', '2018', '2019', '2020', '2021','2022', '2023'],
+            crosshair: true,
+            accessibility: {
+                description: 'Years'
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'No. of accidents'
+            }
+        },
+        tooltip: {
+            valueSuffix: ''
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series: [
+            {
+                name: 'Fatal',
+                data: [
+                    {% for analysis in accident_analysis %}
+                        {% if forloop.last %}{{ analysis.fatal }}{% else %}{{ analysis.fatal }}, {% endif %}
+                    {% endfor %}
+                ]
+            },
+            {
+                name: 'Non Fatal',
+                data: [
+                    {% for analysis in accident_analysis %}
+                        {% if forloop.last %}{{ analysis.non_fatal }}{% else %}{{ analysis.non_fatal }}, {% endif %}
+                    {% endfor %}
+                ]
+            }
+        ]
+    });
+</script>
+
+<script>
+    Highcharts.chart('container-pie', {
+        chart: {
+            type: 'pie'
+        },
+        title: {
+            text: 'Main Cause Analysis'
+        },
+        tooltip: {
+            pointFormat: '{point.percentage:.1f}%'
+        },
+        
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    distance: 20,
+                    format: '{point.name}: {point.percentage:.1f}%'
+                }
+            }
+        },
+        series: [{
+            name: 'Percentage',
+            colorByPoint: true,
+            data: [
+                {% for cause in main_cause_counts %}
+                    {
+                        name: '{{ cause.Main_Cause }}',
+                        y: {{ cause.count }}
+                    },
+                {% endfor %}
+            ]
+        }]
+    });
+</script>
+<script>
+    Highcharts.chart('container-stacked', {
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'RoadCondition Analysis by Year',
+            align: 'left'
+        },
+        xAxis: {
+            categories: [{% for year in years %}'{{ year }}',{% endfor %}],
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Count of Datapoints'
+            },
+            stackLabels: {
+                enabled: true
+            }
+        },
+        legend: {
+            align: 'left',
+            x: 70,
+            verticalAlign: 'top',
+            y: 40, // Adjust this value to move the legend upwards
+            floating: true,
+            backgroundColor: Highcharts.defaultOptions.legend.backgroundColor || 'white',
+            borderColor: '#CCC',
+            borderWidth: 1,
+            shadow: false
+        },
+        tooltip: {
+            headerFormat: '<b>{point.x}</b><br/>',
+            pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+        },
+        plotOptions: {
+            column: {
+                stacking: 'normal',
+                dataLabels: {
+                    enabled: true
+                }
+            }
+        },
+        series: [{% for data in series %}
+            {
+                name: '{{ data.name }}',
+                data: [{% for value in data.data %}{{ value }},{% endfor %}]
+            },
+        {% endfor %}]
+    });
+</script>
+<!-- In analysis.html -->
+
+<script>
+    Highcharts.chart('container-inversebar', {
+        chart: {
+            type: 'bar'
+        },
+        title: {
+            text: 'Weather and Severity Analysis',
+            align: 'left'
+        },
+        xAxis: {
+            categories: [{% for weather in weather_categories %}'{{ weather }}',{% endfor %}],
+            title: {
+                text: 'Weather'
+            },
+            gridLineWidth: 1,
+            lineWidth: 0
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Number of Datapoints',
+                align: 'high'
+            },
+            labels: {
+                overflow: 'justify'
+            },
+            gridLineWidth: 0
+        },
+        tooltip: {
+            valueSuffix: ''
+        },
+        plotOptions: {
+            bar: {
+                dataLabels: {
+                    enabled: true
+                },
+                groupPadding: 0.1
+            }
+        },
+        series: [
+            {% for data in series_data %}
+            {
+                name: '{{ data.name }}',
+                data: [{% for count in data.data %}{{ count }},{% endfor %}]
+            },
+            {% endfor %}
+        ]
+    });
+</script>
+<script>
+    Highcharts.chart('container-stacked2', {
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Accident Spot Analysis by Collision Type',
+            align: 'left'
+        },
+        xAxis: {
+            categories: [{% for accident_spot in accident_spots %}'{{ accident_spot }}',{% endfor %}],
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Count of Datapoints'
+            },
+            stackLabels: {
+                enabled: true
+            }
+        },
+        legend: {
+            align: 'left',
+            x: 70,
+            verticalAlign: 'top',
+            y: 40, // Adjust this value to move the legend upwards
+            floating: true,
+            backgroundColor: Highcharts.defaultOptions.legend.backgroundColor || 'white',
+            borderColor: '#CCC',
+            borderWidth: 1,
+            shadow: false
+        },
+        tooltip: {
+            headerFormat: '<b>{point.x}</b><br/>',
+            pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+        },
+        plotOptions: {
+            column: {
+                stacking: 'normal',
+                dataLabels: {
+                    enabled: true
+                }
+            }
+        },
+        series: [{% for data in series_data2 %}
+            {
+                name: '{{ data.name }}',
+                data: [{% for value in data.data %}{{ value }},{% endfor %}]
+            },
+        {% endfor %}]
+    });
+</script>
+    
+
+{% endblock content %}
