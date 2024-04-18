@@ -1,0 +1,145 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% load i18n static admin_datta %}
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <title>YouTube Analysis</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+
+        
+        .card {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            margin: 20px 0;
+        }
+        
+
+        .header {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="card">
+            <h2 class="header">Blackspot Analysis</h2>
+            <form method="post" class="analysis-form">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="district" class="label">Select the District</label>
+                    <select name="district" id="district" class="input" required>
+                        <option value="">Select District</option>
+                        <option value="Bagalkot">Bagalkot</option>
+                        <option value="Ballari">Ballari</option>
+                        <option value="Belagavi City">Belagavi City</option>
+                        <option value="Belagavi Dist">Belagavi Dist</option>
+                        <option value="Bengaluru City">Bengaluru City</option>
+                        <option value="Bengaluru Dist">Bengaluru Dist</option>
+                        <option value="Bidar">Bidar</option>
+                        <option value="Chamarajanagar">Chamarajanagar</option>
+                        <option value="Chickballapura">Chickballapura</option>
+                        <option value="Chikkamagaluru">Chikkamagaluru</option>
+                        <option value="Chitradurga">Chitradurga</option>
+                        <option value="Dakshina Kannada">Dakshina Kannada</option>
+                        <option value="Davanagere">Davanagere</option>
+                        <option value="Dharwad">Dharwad</option>
+                        <option value="Gadag">Gadag</option>
+                        <option value="Hassan">Hassan</option>
+                        <option value="Haveri">Haveri</option>
+                        <option value="Hubballi Dharwad City">Hubballi Dharwad City</option>
+                        <option value="K.G.F">K.G.F</option>
+                        <option value="Kalaburagi">Kalaburagi</option>
+                        <option value="Kalaburagi City">Kalaburagi City</option>
+                        <option value="Karnataka Railways">Karnataka Railways</option>
+                        <option value="Kodagu">Kodagu</option>
+                        <option value="Kolar">Kolar</option>
+                        <option value="Koppal">Koppal</option>
+                        <option value="Mandya">Mandya</option>
+                        <option value="Mangaluru City">Mangaluru City</option>
+                        <option value="Mysuru City">Mysuru City</option>
+                        <option value="Mysuru Dist">Mysuru Dist</option>
+                        <option value="Raichur">Raichur</option>
+                        <option value="Ramanagara">Ramanagara</option>
+                        <option value="Shivamogga">Shivamogga</option>
+                        <option value="Tumakuru">Tumakuru</option>
+                        <option value="Udupi">Udupi</option>
+                        <option value="Uttara Kannada">Uttara Kannada</option>
+                        <option value="Vijayanagara">Vijayanagara</option>
+                        <option value="Vijayapur">Vijayapur</option>
+                        <option value="Yadgir">Yadgir</option>
+                    </select>
+                    
+                </div>
+                <div class="form-group">
+                    <label for="blackspot_type" class="label">Blackspot type</label>
+                    <select name="blackspot_type" id="blackspot_type" class="input" required>
+                        <option value="">Select Blackspot Type</option>
+                        <option value="blackspot">Blackspot</option>
+                        <option value="greyspot">Greyspot</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+            
+        </div>
+
+        <div class="result-container">
+            {% if map_html_path %}
+                 <iframe src="{% static 'assets/maps/mysore_map.html' %}" width="100%" height="800"></iframe>
+            {% endif %}  
+        </div>
+    </div>
+</body>
+
+
+</html>
+
+{% endblock content %}

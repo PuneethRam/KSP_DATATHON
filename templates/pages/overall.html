@@ -1,0 +1,363 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% load i18n static admin_datta %}
+{% block content %}
+
+<!-- analysis.html -->
+<head>
+<style>
+#container-stacked2 {
+    height: 600px;
+} 
+
+
+</style>
+</head> 
+
+<div class="container mt-4">
+    <div class="card">
+        <h4 class="header">Overall Analysis</h4>
+        <form method="post" class="analysis-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="district" class="label">Select the District</label>
+                <select name="district" id="district" class="input" required>
+                    <option value="">Select District</option>
+                    <option value="Bagalkot">Bagalkot</option>
+                    <option value="Ballari">Ballari</option>
+                    <option value="Belagavi City">Belagavi City</option>
+                    <option value="Belagavi Dist">Belagavi Dist</option>
+                    <option value="Bengaluru City">Bengaluru City</option>
+                    <option value="Bengaluru Dist">Bengaluru Dist</option>
+                    <option value="Bidar">Bidar</option>
+                    <option value="Chamarajanagar">Chamarajanagar</option>
+                    <option value="Chickballapura">Chickballapura</option>
+                    <option value="Chikkamagaluru">Chikkamagaluru</option>
+                    <option value="Chitradurga">Chitradurga</option>
+                    <option value="Dakshina Kannada">Dakshina Kannada</option>
+                    <option value="Davanagere">Davanagere</option>
+                    <option value="Dharwad">Dharwad</option>
+                    <option value="Gadag">Gadag</option>
+                    <option value="Hassan">Hassan</option>
+                    <option value="Haveri">Haveri</option>
+                    <option value="Hubballi Dharwad City">Hubballi Dharwad City</option>
+                    <option value="K.G.F">K.G.F</option>
+                    <option value="Kalaburagi">Kalaburagi</option>
+                    <option value="Kalaburagi City">Kalaburagi City</option>
+                    <option value="Karnataka Railways">Karnataka Railways</option>
+                    <option value="Kodagu">Kodagu</option>
+                    <option value="Kolar">Kolar</option>
+                    <option value="Koppal">Koppal</option>
+                    <option value="Mandya">Mandya</option>
+                    <option value="Mangaluru City">Mangaluru City</option>
+                    <option value="Mysuru City">Mysuru City</option>
+                    <option value="Mysuru Dist">Mysuru Dist</option>
+                    <option value="Raichur">Raichur</option>
+                    <option value="Ramanagara">Ramanagara</option>
+                    <option value="Shivamogga">Shivamogga</option>
+                    <option value="Tumakuru">Tumakuru</option>
+                    <option value="Udupi">Udupi</option>
+                    <option value="Uttara Kannada">Uttara Kannada</option>
+                    <option value="Vijayanagara">Vijayanagara</option>
+                    <option value="Vijayapur">Vijayapur</option>
+                    <option value="Yadgir">Yadgir</option>
+                </select>
+                
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+        
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div id="container-column"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div id="container-stacked"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div id="container-pie"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div id="container-inversebar"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+            <div id="container-stacked2"></div>
+    </div>
+
+    <div class="result-container">
+        {% if map_html_path %}
+             <iframe src="{% static 'assets/maps/maps.html' %}" width="100%" height="800"></iframe>
+        {% endif %}  
+    </div>
+
+</div>
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+
+<script>
+    Highcharts.chart('container-column', {
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Accident Analysis',
+            align: 'left'
+        },
+        xAxis: {
+            categories:  [ '2016','2017', '2018', '2019', '2020', '2021','2022', '2023'],
+            crosshair: true,
+            accessibility: {
+                description: 'Years'
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'No. of accidents'
+            }
+        },
+        tooltip: {
+            valueSuffix: ''
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series: [
+            {
+                name: 'Fatal',
+                data: [
+                    {% for analysis in accident_analysis %}
+                        {% if forloop.last %}{{ analysis.fatal }}{% else %}{{ analysis.fatal }}, {% endif %}
+                    {% endfor %}
+                ]
+            },
+            {
+                name: 'Non Fatal',
+                data: [
+                    {% for analysis in accident_analysis %}
+                        {% if forloop.last %}{{ analysis.non_fatal }}{% else %}{{ analysis.non_fatal }}, {% endif %}
+                    {% endfor %}
+                ]
+            }
+        ]
+    });
+</script>
+
+<script>
+    Highcharts.chart('container-pie', {
+        chart: {
+            type: 'pie'
+        },
+        title: {
+            text: 'Main Cause Analysis'
+        },
+        tooltip: {
+            pointFormat: '{point.percentage:.1f}%'
+        },
+        
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    distance: 20,
+                    format: '{point.name}: {point.percentage:.1f}%'
+                }
+            }
+        },
+        series: [{
+            name: 'Percentage',
+            colorByPoint: true,
+            data: [
+                {% for cause in main_cause_counts %}
+                    {
+                        name: '{{ cause.Main_Cause }}',
+                        y: {{ cause.count }}
+                    },
+                {% endfor %}
+            ]
+        }]
+    });
+</script>
+<script>
+    Highcharts.chart('container-stacked', {
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'RoadCondition Analysis by Year',
+            align: 'left'
+        },
+        xAxis: {
+            categories: [{% for year in years %}'{{ year }}',{% endfor %}],
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Count of Datapoints'
+            },
+            stackLabels: {
+                enabled: true
+            }
+        },
+        legend: {
+            align: 'left',
+            x: 70,
+            verticalAlign: 'top',
+            y: 40, // Adjust this value to move the legend upwards
+            floating: true,
+            backgroundColor: Highcharts.defaultOptions.legend.backgroundColor || 'white',
+            borderColor: '#CCC',
+            borderWidth: 1,
+            shadow: false
+        },
+        tooltip: {
+            headerFormat: '<b>{point.x}</b><br/>',
+            pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+        },
+        plotOptions: {
+            column: {
+                stacking: 'normal',
+                dataLabels: {
+                    enabled: true
+                }
+            }
+        },
+        series: [{% for data in series %}
+            {
+                name: '{{ data.name }}',
+                data: [{% for value in data.data %}{{ value }},{% endfor %}]
+            },
+        {% endfor %}]
+    });
+</script>
+<!-- In analysis.html -->
+
+<script>
+    Highcharts.chart('container-inversebar', {
+        chart: {
+            type: 'bar'
+        },
+        title: {
+            text: 'Weather and Severity Analysis',
+            align: 'left'
+        },
+        xAxis: {
+            categories: [{% for weather in weather_categories %}'{{ weather }}',{% endfor %}],
+            title: {
+                text: 'Weather'
+            },
+            gridLineWidth: 1,
+            lineWidth: 0
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Number of Datapoints',
+                align: 'high'
+            },
+            labels: {
+                overflow: 'justify'
+            },
+            gridLineWidth: 0
+        },
+        tooltip: {
+            valueSuffix: ''
+        },
+        plotOptions: {
+            bar: {
+                dataLabels: {
+                    enabled: true
+                },
+                groupPadding: 0.1
+            }
+        },
+        series: [
+            {% for data in series_data %}
+            {
+                name: '{{ data.name }}',
+                data: [{% for count in data.data %}{{ count }},{% endfor %}]
+            },
+            {% endfor %}
+        ]
+    });
+</script>
+<script>
+    Highcharts.chart('container-stacked2', {
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Accident Spot Analysis by Collision Type',
+            align: 'left'
+        },
+        xAxis: {
+            categories: [{% for accident_spot in accident_spots %}'{{ accident_spot }}',{% endfor %}],
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Count of Datapoints'
+            },
+            stackLabels: {
+                enabled: true
+            }
+        },
+        legend: {
+            align: 'left',
+            x: 70,
+            verticalAlign: 'top',
+            y: 40, // Adjust this value to move the legend upwards
+            floating: true,
+            backgroundColor: Highcharts.defaultOptions.legend.backgroundColor || 'white',
+            borderColor: '#CCC',
+            borderWidth: 1,
+            shadow: false
+        },
+        tooltip: {
+            headerFormat: '<b>{point.x}</b><br/>',
+            pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+        },
+        plotOptions: {
+            column: {
+                stacking: 'normal',
+                dataLabels: {
+                    enabled: true
+                }
+            }
+        },
+        series: [{% for data in series_data2 %}
+            {
+                name: '{{ data.name }}',
+                data: [{% for value in data.data %}{{ value }},{% endfor %}]
+            },
+        {% endfor %}]
+    });
+</script>
+    
+
+{% endblock content %}

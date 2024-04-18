@@ -1,0 +1,6 @@
+<form id="analysis-form-{{ index }}" action="{% url 'telegram' %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="lat" value="{{ lat }}">
+    <input type="hidden" name="lon" value="{{ lon }}">
+    <button type="submit">Click for analysis</button>
+</form>
