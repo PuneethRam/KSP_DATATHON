@@ -11,21 +11,25 @@
 
     <title>YouTube Analysis</title>
     <style>
+        .cards-list {
+            display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+        }
         body {
             font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
-            margin: 0;
-            padding: 0;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
         }
 
         
-        .card {
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            margin: 20px 0;
+        .cardd {
+            width: calc(25% - 20px);
+    margin: 10px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
         }
         
 
@@ -34,18 +38,40 @@
             margin-bottom: 20px;
         }
 
-        .label {
-            font-weight: bold;
-            margin-bottom: 5px;
-            display: block;
-        }
+    
+
+        #in {
+    display: block;
+    margin: 0 auto;
+    width: 200px; /* Adjust width as needed */
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
 
         .input {
-            padding: 10px;
+            /* padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
             width: 100%;
-            margin-bottom: 10px;
+            margin-bottom: 10px; */
+            width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+        }
+        
+        
+        .card_image img {
+            width: 70%;
+            height: 70%;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
         }
 
         .btn-primary {
@@ -63,6 +89,55 @@
         .btn-primary:hover {
             background-color: #0056b3;
         }
+        #timeSelection {
+            display: none;
+        }
+        .card_title {
+    background-color: #f5f5f5;
+    padding: 10px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    text-align: center;
+}
+
+        
+#timeSelection {
+    text-align: center;
+    margin-top: 20px;
+}
+
+#timeSelection label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+#timeSelection select {
+    width: 150px; /* Adjust width as needed */
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+
+button {
+    display: block;
+    margin: 0 auto;
+}
+.header {
+    text-align: center;
+}
+
+.input {
+    width: 200px; /* Adjust width as needed */
+    padding: 8px;
+    margin: 0 auto;
+    display: block;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
         
     </style>
 </head>
@@ -70,11 +145,13 @@
 <body>
     <div class="container">
         <div class="card">
-            <h2 class="header">Factor Analysis</h2>
+            <br>
+            <h1 class="header">Factor Analysis</h1>
             <form method="post" class="analysis-form">
                 {% csrf_token %}
                 <div class="form-group">
-                    <label for="district" class="label">Select the District</label>
+                    <!-- <label for="district" class="label">Select the District</label> -->
+                    <label for="district" class="label" style="display: block; text-align: center; margin-bottom: 10px; color: black; font-weight: bold;font-size: 20px;">Select the District</label>
                     <select name="district" id="district" class="input" required>
                         <option value="">Select District</option>
                         <option value="Bagalkot">Bagalkot</option>
@@ -118,20 +195,110 @@
                     </select>
                     
                 </div>
+                <br>
                 <div class="form-group">
-                    <label for="type" class="label">Select type</label>
-                    <select name="type" id="type" class="input" required>
-                        <option value="">Select Type</option>
-                        <option value="Cause">Cause</option>
-                        <option value="severity">Severity</option>
-                        <option value="time">Time</option>
-                        <option value="weather">Weather</option>
+                    <!-- <label for="parameter"><b>Select Parameter:</b></label> -->
+                    <label for="parameter" class="label" style="display: block; text-align: center; font-size: 20px; margin-bottom: 10px; color: black; font-weight: bold;">Select the Parameter</label>
+                    <div class="cards-list">
+                        <div class="cardd" onclick="selectParameter('Main Cause')">
+                            <div class="card_image" style="text-align: center;">
+                                <img src="https://cdn-icons-png.flaticon.com/512/4351/4351026.png" />
+                            </div>
+                            <div class="card_title">
+                                <p><b>Main Cause of Accident</b></p>
+                            </div>
+                        </div>
+                        <div class="cardd" onclick="selectParameter('Weather')">
+                            <div class="card_image" style="text-align: center;">
+                                <img src="https://www.pngall.com/wp-content/uploads/11/Weather-PNG.png" />
+                            </div>
+                            <div class="card_title">
+                                <p><b>Weather Condition</b></p>
+                            </div>
+                        </div>
+                        
+                        <div class="cardd" onclick="selectParameter('Road Conditions')">
+                            <div class="card_image" style="text-align: center;">
+                                <img src="https://static.thenounproject.com/png/4347873-200.png" />
+                            </div>
+                            <div class="card_title">
+                                <p><b>Road Conditions</b></p>
+                            </div>
+                        </div>
+                        
+                        <div class="cardd" onclick="selectParameter('Accident Severity')">
+                            <div class="card_image" style="text-align: center;">
+                                <img src="https://png.pngtree.com/png-clipart/20230622/original/pngtree-car-crash-icon-accident-png-image_9203130.png" />
+                            </div>
+                            <div class="card_title">
+                                <p><b>Accident Severity</b></p>
+                            </div>
+                        </div>
+                        
+                        <div class="cardd" onclick="selectParameter('Time Based')">
+                            <div class="card_image" style="text-align: center;">
+                                <img src="https://cdn3d.iconscout.com/3d/premium/thumb/time-expired-8127346-6508154.png" />
+                            </div>
+                            <div class="card_title title-black">
+                                <p><b>Time Range</b></p>
+                            </div>
+                        </div>
+                    </div>
+                    <label for="in" class="label" style="display: block; text-align: center;font-size: 20px; margin-bottom: 10px; color: black; font-weight: bold;">Parameter Selected</label>
+  
+                    <input type="text" id="in" name="in" required>     
+                </div> 
+                <div id="timeSelection">
+                    <!-- <label for="fromTime">From Timing:</label> -->
+                    <label for="fromTime" class="label" style="display: block; text-align: center; margin-bottom: 10px; color: black; font-weight: bold;">From Timing:</label>
+                    <select name="starttime" id="fromTime">
+                        <option value="09:00:00">09:00:00</option>
+                        <option value="12PM">12 PM</option>
+                        <option value="3PM">3 PM</option>
+                        <!-- Add more timings as needed -->
+                    </select>
+                    
+                    <!-- <label for="toTime">End Timing:</label> -->
+                    <label for="toTime" class="label" style="display: block; text-align: center; margin-bottom: 10px; color: black; font-weight: bold;">To Timing:</label>
+                    <select name="endtime" id="toTime">
+                        <option value="12:00:00">12:00:00</option>
+                        <option value="3PM">3 PM</option>
+                        <option value="6PM">6 PM</option>
+                        <!-- Add more timings as needed -->
                     </select>
                 </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <br>
+                <button type="submit" class="btn btn-primary" style="display: block; margin: 0 auto;">Visualize</button>
+                <br>
             </form>
+            <script>
+                
+                // Add event listeners to all cards
+            var cards = document.querySelectorAll('.card_title');
+            cards.forEach(function(card) {
+                card.addEventListener('click', function() {
+                    // Toggle the "clicked" class
+                    this.classList.toggle('clicked');
+                });
+            });
+        
+            // Function to handle card click event
+            function selectParameter(parameter) {
+                if (parameter === 'Time Based') {
+                    document.getElementById('timeSelection').style.display = 'block';
+                } else {
+                    document.getElementById('timeSelection').style.display = 'none';
+                }
+                // Update the content to display the selected parameter name
+                const selectedParameterInput = document.getElementById('in');
+                selectedParameterInput.value = parameter;
+                // Toggle the "clicked" class
+                this.classList.toggle('clicked');
+            }
+            </script>
             
         </div>
+       
 
         <div class="result-container">
             {% if map_html_path %}

@@ -9,7 +9,7 @@
 <head>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-    <title>YouTube Analysis</title>
+    <title>inconvinience alert</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -49,10 +49,9 @@
         }
         .cards-list {
             display: flex;
-            justify-content: center;
+            justify-content: space-around;
             flex-wrap: wrap;
             margin-bottom: 20px;
-            
         }
         
         #in {
@@ -101,7 +100,7 @@
 <body>
     <div class="container">
         <div class="card">
-            <h2 class="header">Blackspot Analysis</h2>
+            <h2 class="header">Problem Analysis</h2>
             <form method="post" class="analysis-form">
                 {% csrf_token %}
                 <div class="form-group">
@@ -149,61 +148,17 @@
                     </select>
                     
                 </div>
-                <div class="form-group">
-                    <label for="parameter" class="label" style="display: block; text-align: center; font-size:20px; margin-bottom: 10px; color: black; font-weight: bold;">Select the Parameter</label>
-                    <div class="cards-list">
-                        <div class="cardd" onclick="selectParameter('blackspot')">
-                            <div class="card_image" style="text-align: center;">
-                                <img src="{% static 'assets/images/blackspot.png' %}" style="width: 200px; height: 200px;" />
-                            </div>
-                            <div class="card_title">
-                                <p style=" text-align: center;font-size:30px; color: black"><b>Blackspot</b></p>
-                            </div>
-                        </div>
-                        <div class="cardd" onclick="selectParameter('greyspot')">
-                            <div class="card_image" style="text-align: center;">
-                                <img src="{% static 'assets/images/greyspot.jpeg' %}" style="width: 200px; height: 200px;"/>
-                            </div>
-                            <div class="card_title">
-                                <p style="text-align: center; font-size:30px"><b>Greyspot</b></p>
-                            </div>
-                        </div>
-                        
-
-                    </div>
-                    <label for="in" class="label" style="display: block; text-align: center; font-size:20px;margin-bottom: 10px; color: black; font-weight: bold;">Parameter Selected</label>
-  
-                    <input type="text" id="in" name="in" required> 
-                </div>
+                
+                    
                 <button type="submit" class="btn btn-primary" style="display: block; margin: 0 auto;">Submit</button>
             </form>
-            <script>
-                
-                // Add event listeners to all cards
-            var cards = document.querySelectorAll('.card_title');
-            cards.forEach(function(card) {
-                card.addEventListener('click', function() {
-                    // Toggle the "clicked" class
-                    this.classList.toggle('clicked');
-                });
-            });
-        
-            // Function to handle card click event
-            function selectParameter(parameter) {
-               
-                // Update the content to display the selected parameter name
-                const selectedParameterInput = document.getElementById('in');
-                selectedParameterInput.value = parameter;
-                // Toggle the "clicked" class
-                this.classList.toggle('clicked');
-            }
-            </script>
+            
             
         </div>
 
         <div class="result-container">
             {% if map_html_path %}
-                 <iframe src="{% static 'assets/maps/mysore_map.html' %}" width="100%" height="800"></iframe>
+                 <iframe src="{% static 'assets/maps/inconvenience.html' %}" width="100%" height="800"></iframe>
             {% endif %}  
         </div>
     </div>

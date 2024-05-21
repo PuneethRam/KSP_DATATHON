@@ -119,7 +119,7 @@
           </ul>
         </li>
         
-        <li
+        <!--<li
           data-username="basic components Button Alert Badges breadcrumb Paggination progress Tooltip popovers Carousel Cards Collapse Tabs pills Modal Grid System Typography Extra Shadows Embeds"
           class="nav-item pcoded-hasmenu {% if 'basic_components' in parent %}active pcoded-trigger{% endif %}">
           <a href="javascript:" class="nav-link "><span class="pcoded-micon"><i
@@ -127,16 +127,16 @@
           <ul class="pcoded-submenu">
             <li class="{% if 'button' in segment %}active{% endif %}"><a href="{% url 'bc_button' %}" class="">Crypto Market</a></li>
             <li class="{% if 'badges' in segment %}active{% endif %}"><a href="{% url 'bc_badges' %}" class="">Stock Market</a></li>
-            <!--<li class="{% if 'breadcrumbs_&_pagination' in segment %}active{% endif %}"><a href="{% url 'bc_breadcrumb_pagination' %}" class="">Breadcrumb & paggination</a></li>-->
+            <li class="{% if 'breadcrumbs_&_pagination' in segment %}active{% endif %}"><a href="{% url 'bc_breadcrumb_pagination' %}" class="">Breadcrumb & paggination</a></li>
             <li class="{% if 'collapse' in segment %}active{% endif %}"><a href="{% url 'bc_collapse' %}" class="">Forex Market</a></li>
             <!--<li class="{% if 'navs_&_tabs' in segment %}active{% endif %}"><a href="{% url 'bc_tabs' %}" class="">Tabs & pills</a></li>
             <li class="{% if 'typography' in segment %}active{% endif %}"><a href="{% url 'bc_typography' %}" class="">Typography</a></li>
 
 
             <li class="{% if 'feather_icon' in segment %}active{% endif %}"><a href="{% url 'icon_feather' %}" class="">Feather<span
-                  class="pcoded-badge label label-danger">NEW</span></a></li>-->
+                  class="pcoded-badge label label-danger">NEW</span></a></li>
           </ul>
-        </li>
+        </li>-->
         <li data-username="Profile Page" class="nav-item {% if 'overall' in segment %}active{% endif %}"><a href="{% url 'overall' %}" class="nav-link"><span
           class="pcoded-micon"><i class="feather icon-user"></i></span><span class="pcoded-mtext">Overall Analysis</span></a>
         </li>
@@ -146,6 +146,12 @@
             
       </span></a>
         </li>
+
+        <li data-username="TUMOR ANALYSIS" class="nav-item {% if 'alert' in segment %}active{% endif %}"><a href="{% url 'alert' %}" class="nav-link"><span
+          class="pcoded-micon"><i class="feather icon-sidebar"></i></span><span class="pcoded-mtext">Inconvinience alerts
+        
+  </span></a>
+    </li>
         
         
         <li data-username="Charts Morris" class="nav-item {% if 'timeanalysis' in segment %}active{% endif %}"><a href="{% url 'timeanalysis' %}" class="nav-link "><span

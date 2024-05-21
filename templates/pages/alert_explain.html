@@ -1,0 +1,175 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% load i18n static admin_datta %}
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Person and Location Details</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            align-items: center;
+
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 2fr 2fr;
+            grid-gap: 20px;
+            align-items: center;
+            /* min-height: 150vh; */
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
+        .card {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .heading {
+            font-size: 28px;
+            text-align: center;
+            color: #555;
+        }
+
+        .image-container {
+            text-align: center;
+        }
+
+        .image {
+            width: 100%;
+            max-width: 300px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .location-details {
+            margin-bottom: 15px;
+            color:black;
+        }
+
+        .location-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: black;
+            text-align: center;
+        }
+
+        .location-value {
+            font-size: 20px;
+            color: #444;
+            text-align: center;
+        }
+
+        .person-card {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+        }
+
+ 
+        .directions-card {
+            margin-top: 20px;
+        }
+
+        .directions-link {
+            display: block;
+            text-align: center;
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #007bff;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .directions-link:hover {
+            background-color: #0056b3;
+            font-size:24;
+        }
+        p{
+            font-size:22px
+        }
+        label{
+            font-size:24px
+
+        }
+
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {       	
+            const latitude = {{context.lat}};  // Replace with dynamic latitude value
+            const longitude = {{context.lon}};  // Replace with dynamic longitude value
+            const directionsLink = document.getElementById("directions-link");
+
+            directionsLink.href = `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`;
+        });
+    </script>
+</head>
+
+<body>
+    <h1 style="text-align: center"><b>User Inconvenience Details</b></h1>
+    <br>
+    <div class="container">
+        {% if context %}
+        
+            <div class="card">
+                <h1 class="heading"><b>{{context.title}}</b></h1>
+                <div class="image-container">
+                    <br>
+                    <img src={{context.img}} alt="Person's Image" class="image">
+                    <div class="person-info">
+                        <p><b>Timestamp:</b></p>
+                        <p>{{context.ts}}</p>
+                    </div>
+                    <br>
+                    <div class="person-info">
+                        <p class="name"><b>Reporter Name:</b></p>
+                        <p>Nivedhitha DP</p>
+                    </div>
+                    <br>
+                    <div class="person-info">
+                        <p class="phone"><b>Reporter Phone Number:</b></p>
+                        <p>{{context.pn}}</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h1 class="heading"><b>Location Details</b></h1><br>
+                
+                <div class="location-details">
+                    <p class="location-label">Latitude:</p>
+                    <p class="location-value">{{context.lat}}</p>
+                </div>
+                <div class="location-details">
+                    <p class="location-label">Longitude:</p>
+                    <p class="location-value">{{context.lon}}</p>
+                </div>
+                <div class="location-details">
+                    <p class="location-label">Address:</p>
+                    <p class="location-value">{{context.address}}</p>
+                </div>
+                <div class="location-details">
+                    <p class="location-label">Description:</p>
+                    <p class="location-value">{{context.desc}}</p>
+                </div>
+                <div class="directions-card">
+                    <!-- <h3 style="text-align: center;">Get Directions</h3> -->
+                    <a id="directions-link" class="directions-link" href="#" target="_blank" style="font-size:24px">Get Directions to Location</a>
+                </div>
+            </div>
+
+        {% endif %}
+    </div>
+</body>
+</html>
+{% endblock content %}

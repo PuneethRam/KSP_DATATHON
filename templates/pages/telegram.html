@@ -66,7 +66,7 @@
 <div class="container mt-4">
     <div class="row">
         <div class="card">
-            <h4 class="header">Overall Analysis</h4>
+            <h4 class="header">Blackspot Analysis Analysis</h4>
 
         </div>
     </div>
@@ -109,6 +109,13 @@
             <div class="card">
                 <div class="card-body">
                     <div id="container-stacked2"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div id="container-pie2"></div>
                 </div>
             </div>
         </div>
@@ -207,6 +214,45 @@
         }]
     });
 </script>
+
+<script>
+    Highcharts.chart('container-pie2', {
+        chart: {
+            type: 'pie'
+        },
+        title: {
+            text: 'Junction Control Analysis'
+        },
+        tooltip: {
+            pointFormat: '{point.percentage:.1f}%'
+        },
+        
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    distance: 20,
+                    format: '{point.name}: {point.percentage:.1f}%'
+                }
+            }
+        },
+        series: [{
+            name: 'Percentage',
+            colorByPoint: true,
+            data: [
+                {% for cause in junction_control_counts %}
+                    {
+                        name: '{{ cause.Junction_Control }}',
+                        y: {{ cause.count }}
+                    },
+                {% endfor %}
+            ]
+        }]
+    });
+</script>
+
 <script>
     Highcharts.chart('container-stacked', {
         chart: {
@@ -362,6 +408,10 @@
         {% endfor %}]
     });
 </script>
+
+
+
+
     
 
 {% endblock content %}

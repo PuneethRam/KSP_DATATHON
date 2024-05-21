@@ -311,7 +311,9 @@ def timeanalysis(request):
 
     if request.method == 'POST':
         district = request.POST.get('district')
-        type = request.POST.get('type')
+        type = request.POST.get('in')
+        print(type)
+        print(district)
       
         a=pd.read_csv(r'home\datasets\FINAL_KARNATAKA_DATA.csv')
         districts_to_keep = [district]
@@ -320,9 +322,9 @@ def timeanalysis(request):
 
 
         df=pd.read_csv(r'home\datasets\dataset.csv')
-        if type=="Cause":
+        if type=="Main Cause":
             # Create a map object
-            m = folium.Map(location=[12.2958, 76.6394], zoom_start=10)
+            m = folium.Map(location=[12.9716, 77.5946], zoom_start=10)
 
             # Create separate MarkerCluster layers for each cause of the accident
             human_error_cluster = MarkerCluster(name='Human Error', control=False).add_to(m)
@@ -456,11 +458,186 @@ def timeanalysis(request):
             map_html_path = r'static\assets\maps\factor_map.html'
             m.save(map_html_path)
         
+        
 
-        elif type=="severity":
+        elif type=="Road Conditions":
+            import folium
+            from folium.plugins import MarkerCluster
+
+            # Create a map object
+            m = folium.Map(location=[12.9716, 77.5946], zoom_start=10)
+
+            # Create separate MarkerCluster layers for each cause of the accident
+            no_influence_cluster = MarkerCluster(name='No Influence', control=False).add_to(m)
+            drainage_cluster = MarkerCluster(name='Drainage Ditch', control=False).add_to(m)
+            construction_cluster = MarkerCluster(name='Construction Work', control=False).add_to(m)
+            pothole_cluster = MarkerCluster(name='Pot Holed', control=False).add_to(m)
+            road_defect_cluster = MarkerCluster(name='Engineering Defect of Road', control=False).add_to(m)
+
+            # Define the additional conditions
+            additional_conditions = ['Not Applicable', 'No influence on accident', 'Drainage Ditch', 'Construction Work / Material', 'Pot holed', 'Engineering Defect of Road']
+
+            # Calculate marker counts for each additional condition
+            na_count = len(df[df['Road_Condition'].isin(['Not Applicable'])])
+            no_influence_count = len(df[df['Road_Condition'].isin(['No influence on accident'])])
+            drainage_ditch_count = len(df[df['Road_Condition'].isin(['Drainage Ditch'])])
+            construction_work_count = len(df[df['Road_Condition'].isin(['Construction Work / Material'])])
+            pot_holed_count = len(df[df['Road_Condition'].isin(['Pot holed'])])
+            engineering_defect_count = len(df[df['Road_Condition'].isin(['Engineering Defect of Road'])])
+
+            # Define icon URLs
+            orange_url = 'https://images.emojiterra.com/google/android-12l/512px/1f7e0.png'
+            yellow_url = 'https://www.pngall.com/wp-content/uploads/15/Yellow-Circle-No-Background.png'
+            green_url = 'https://png.pngtree.com/png-vector/20220523/ourmid/pngtree-green-circle-button-on-white-background-push-modern-paper-vector-png-image_13628152.png'
+            drainage_url = 'https://static.thenounproject.com/png/2388954-200.png'
+            construction_icon_url = 'https://static.thenounproject.com/png/775127-200.png'
+            not_applicable_icon_url = 'https://cdn4.iconfinder.com/data/icons/defaulticon/icons/png/256x256/no.png'
+            road_defect_icon_url = 'https://cdn2.iconfinder.com/data/icons/civil-engineering-flat/60/Damaged-Road-damaged-road-potholes-roadworks-512.png'
+            pot_hole_url = 'https://static.thenounproject.com/png/753-200.png'
+
+
+            # Define icons for legend
+            legend_icons = {
+                'Be Alert (<10)' : 'https://images.emojiterra.com/google/android-12l/512px/1f7e0.png',
+                'Accident Prone (10-100)' : 'https://www.pngall.com/wp-content/uploads/15/Yellow-Circle-No-Background.png',
+                'Red Zone (>100)' : 'https://png.pngtree.com/png-vector/20220523/ourmid/pngtree-green-circle-button-on-white-background-push-modern-paper-vector-png-image_13628152.png',
+            'drainage_url' : 'https://static.thenounproject.com/png/2388954-200.png',
+            'construction_icon_url' : 'https://static.thenounproject.com/png/775127-200.png',
+            'not_applicable_icon_url' : 'https://cdn4.iconfinder.com/data/icons/defaulticon/icons/png/256x256/no.png',
+            'road_defect_icon_url' : 'https://cdn2.iconfinder.com/data/icons/civil-engineering-flat/60/Damaged-Road-damaged-road-potholes-roadworks-512.png',
+            'pot_hole_url' : 'https://static.thenounproject.com/png/753-200.png'
+
+            }
+
+
+            # Create legend HTML
+            legend_html = f"""
+            <div style="
+                position: fixed;
+                bottom: 50px;
+                left: 50px;
+                width: 300px;
+                height: auto;
+                background-color: #ffffff;
+                border: 2px solid #cccccc;
+                border-radius: 5px;
+                padding: 10px;
+                z-index: 1000;
+                font-size: 16px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            ">
+
+                <!-- First set of legends -->
+                <div style="margin-top: 10px;">
+                    <p style="font-weight: bold; margin-bottom: 5px;text-align: center;">Number of Accidents</p>
+                    <div style="margin-top: 5px;">
+                        <span style="display: inline-block; width: 20px; height: 20px; background-color: green; margin-right: 5px;"></span>
+                        <span style="font-weight: bold;">Be alert:</span> Less than 10
+                    </div>
+                    <div style="margin-top: 5px;">
+                        <span style="display: inline-block; width: 20px; height: 20px; background-color: yellow; margin-right: 5px;"></span>
+                        <span style="font-weight: bold;">Accident Prone:</span> 10 to 100
+                    </div>
+                    <div style="margin-top: 5px;">
+                        <span style="display: inline-block; width: 20px; height: 20px; background-color: orange; margin-right: 5px;"></span>
+                        <span style="font-weight: bold;">Danger Zone:</span> Greater than 100
+                    </div>
+                </div>
+
+
+            <div style="position: fixed; top: 10px; right: 10px; z-index: 1000; background-color: #fff; border: 2px solid #ccc; border-radius: 5px; padding: 10px;">
+                <p style="font-weight: bold;">Road Condition </p>
+                <div style="margin-top: 5px;">
+                    <img src="https://static.thenounproject.com/png/2388954-200.png" style="width: 20px; height: 20px; margin-right: 5px;">
+                    <span style="font-weight: bold;">Drainage Ditch</span> {drainage_ditch_count}
+                </div>
+                <div style="margin-top: 5px;">
+                    <img src="https://static.thenounproject.com/png/775127-200.png" style="width: 20px; height: 20px; margin-right: 5px;">
+                    <span style="font-weight: bold;">Construction Work</span> {construction_work_count}
+                </div>
+                <div style="margin-top: 5px;">
+                    <img src="https://cdn2.iconfinder.com/data/icons/civil-engineering-flat/60/Damaged-Road-damaged-road-potholes-roadworks-512.png" style="width: 20px; height: 20px; margin-right: 5px;">
+                    <span style="font-weight: bold;">Engineering Defect of Road</span> {engineering_defect_count}
+                </div>
+                <div style="margin-top: 5px;">
+                    <img src="https://static.thenounproject.com/png/753-200.png" style="width: 20px; height: 20px; margin-right: 5px;">
+                    <span style="font-weight: bold;">Pot Hole</span> {pot_holed_count}
+                </div>
+                <div style="margin-top: 5px;">
+                    <img src="https://cdn4.iconfinder.com/data/icons/defaulticon/icons/png/256x256/no.png" style="width: 20px; height: 20px; margin-right: 5px;">
+                    <span style="font-weight: bold;">No Influence</span> {na_count + no_influence_count}
+                </div>
+            </div>
+            """
+
+            # for cause, icon_url in legend_icons.items():
+            #     legend_html += f"""
+            #     <p style="margin: 5px 0;"><img src="{icon_url}" style="width: 20px; height: 20px; margin-right: 5px;">{cause}</p>
+            # """
+
+
+
+            legend_html += """
+            </div>
+            """
+
+            # Add legend as a custom control
+            m.get_root().html.add_child(folium.Element(legend_html))
+
+
+            for cause in df['Road_Condition']:
+                if cause == 'Not Applicable':
+                    na_count += 1
+                elif cause == 'No influence on accident':
+                    no_influence_count += 1
+                elif cause == 'Drainage Ditch':
+                    drainage_ditch_count += 1
+                elif cause == 'Construction Work / Material':
+                    construction_work_count += 1
+                elif cause == 'Pot holed':
+                    pot_holed_count += 1
+                elif cause == 'Engineering Defect of Road':
+                    engineering_defect_count += 1
+
+            # Iterate through the DataFrame and add markers to the appropriate cluster
+            for index, row in df.iterrows():
+                # Determine the cause of the accident
+                cause = row['Road_Condition']
+
+
+                # Set the icon and cluster based on the cause
+                if cause == 'Drainage Ditch':
+                    icon = folium.features.CustomIcon(drainage_url, icon_size=(45, 45))
+                    cluster = drainage_cluster
+                elif cause == 'Construction Work / Material':
+                    icon = folium.features.CustomIcon(construction_icon_url, icon_size=(45, 45))
+                    cluster = construction_cluster
+                elif cause == 'Not Applicable' or cause == 'No influence on accident':
+                    icon = folium.features.CustomIcon(not_applicable_icon_url, icon_size=(30, 30))
+                    cluster = no_influence_cluster
+                elif cause == 'Pot holed':
+                    icon = folium.features.CustomIcon(pot_hole_url, icon_size=(45, 45))
+                    cluster = pothole_cluster
+                elif cause == 'Engineering Defect of Road':
+                    icon = folium.features.CustomIcon(road_defect_icon_url, icon_size=(45, 45))
+                    cluster = road_defect_cluster
+                else:
+                    continue  # Skip unknown causes
+
+                # Add marker to the appropriate cluster
+                # folium.Marker(location=[row['Latitude'], row['Longitude']], icon=icon).add_to(cluster)
+                folium.Marker(location=[row['Latitude'], row['Longitude']], icon=icon, tooltip=cause).add_to(cluster)
+
+            # Add layer control to toggle between clusters
+            folium.LayerControl(collapsed=False).add_to(m)
+            map_html_path = r'static\assets\maps\factor_map.html'
+            m.save(map_html_path)
+
+        
+        elif type=="Accident Severity":
           
             # Create a map object
-            m = folium.Map(location=[12.2958, 76.6394], zoom_start=10)
+            m = folium.Map(location=[12.9716, 77.5946], zoom_start=10)
             # Create separate MarkerCluster layers for each cause of the accident
             Damage_Only_cluster = MarkerCluster(name='Damage Only', control=False).add_to(m)
             simple_injury_cluster = MarkerCluster(name='Simple Injury', control=False).add_to(m)
@@ -608,8 +785,8 @@ def timeanalysis(request):
         
             m.save(map_html_path)
 
-        elif type=="weather":
-            m = folium.Map(location=[12.2958, 76.6394], zoom_start=10)
+        elif type=="Weather":
+            m = folium.Map(location=[12.9716, 77.5946], zoom_start=10)
 
             clear_conditions = ['Clear', 'Fine', 'Very Hot']
             cloudy_conditions = ['Cloudy']
@@ -773,11 +950,14 @@ def timeanalysis(request):
             map_html_path = r'static\assets\maps\factor_map.html'       
             m.save(map_html_path)
 
-        elif type=="time":
+        elif type=="Time Based":
+            st=request.POST.get('starttime')
+            print(st)
             starttime = pd.to_datetime(request.POST.get('starttime'))
             endtime = pd.to_datetime(request.POST.get('endtime'))
+            print(starttime)
 
-            karnataka_map = folium.Map(location=[12.9716, 77.5946], zoom_start=7)
+            m = folium.Map(location=[12.9716, 77.5946], zoom_start=7)
             custom_icon_create_function = """
             function(cluster) {
                 var markers = cluster.getAllChildMarkers();
@@ -831,7 +1011,7 @@ def timeanalysis(request):
 
 
             # Create a MarkerCluster layer with the custom icon creation function
-            marker_cluster = MarkerCluster(icon_create_function=custom_icon_create_function).add_to(karnataka_map)
+            marker_cluster = MarkerCluster(icon_create_function=custom_icon_create_function).add_to(m)
 
             for index, row in df.iterrows():
                 lat, lon = row['Latitude'], row['Longitude']
@@ -871,7 +1051,7 @@ def telegram(request):
         non_fatal_count = RegionData[(RegionData['Year'].astype(int) == year) & (RegionData['Severity'].astype(str) != 'Fatal')].shape[0]
         accident_analysis.append({'year': year, 'fatal': fatal_count, 'non_fatal': non_fatal_count})
     main_cause_counts = RegionData['Main_Cause'].value_counts().reset_index().rename(columns={'index': 'Main_Cause', 'Main_Cause': 'count'})
-
+    junction_control_counts = RegionData['Junction_Control'].value_counts().reset_index().rename(columns={'index': 'Junction_Control', 'Junction_Control': 'count'})
 #----------------------------------------------------------------------------------------------------
     #Road condition
     year_roadcondition_counts = RegionData.groupby(['Year', 'Road_Condition']).size().reset_index(name='count')
@@ -940,6 +1120,7 @@ def telegram(request):
     context = {
        'accident_analysis': accident_analysis,
        'main_cause_counts': main_cause_counts.to_dict('records'),
+       'junction_control_counts':junction_control_counts.to_dict('records'),
        'years': years,
        'series': series,
        'weather_categories': weather_categories,
@@ -962,9 +1143,9 @@ def blackspots(request):
     
     if request.method == 'POST':
       district = request.POST.get('district')
-      blackspot_type = request.POST.get('blackspot_type')
-     
-
+      type = request.POST.get('in')
+      print(type)
+       
       a=pd.read_csv(r'home\datasets\FINAL_KARNATAKA_DATA.csv')
       districts_to_keep = [district]
       filtered_data = a[a['DISTRICTNAME'].isin(districts_to_keep)]
@@ -1057,7 +1238,15 @@ def blackspots(request):
       for index, row in data.iterrows():
           lat, lon = row['Region_Latitude'], row['Region_Longitude']
           total_data_points = row['Total_Data_Points']
-          if total_data_points > 15:
+          if type=="blackspot":
+              colour='black'
+              hp=50
+              lp=15
+          else:
+              colour='grey'
+              hp=13
+              lp=9    
+          if total_data_points > lp and total_data_points<hp:
               # Create a unique class name for each marker
               marker_class = f'marker-{index}'  # Assuming 'index' is unique for each row
 
@@ -1068,9 +1257,9 @@ def blackspots(request):
                   location=[lat, lon],
                   popup=popup_content,  # Assigning the popup content to the marker
                   radius=15,
-                  color='red',
+                  color=colour,
                   fill=True,
-                  fill_color='red'
+                  fill_color=colour
               ).add_to(karnataka_map)
 
       map_html_path = r'static\assets\maps\mysore_map.html'
@@ -1079,6 +1268,80 @@ def blackspots(request):
 
     return render(request, 'pages/blackspots.html', {'map_html_path': map_html_path})
 
+
+@login_required(login_url='/accounts/login/')
+def alert(request):
+  map_html_path = '' 
+  if request.method == 'POST':
+    id="1lfqdrcUgjA7F0id3soULQULCmF9KAIglw1wSLisGywo"
+    name="Accident"
+    url="https://docs.google.com/spreadsheets/d/{}/gviz/tq?tqx=out:csv&sheet={}".format(id,name)
+    data=pd.read_csv(url)
+    from django.urls import reverse
+    analysis_url = reverse('alert_explain')
+    karnataka_map = folium.Map(location=[12.9716, 77.5946], zoom_start=7)
+    for index, row in data.iterrows():
+        lat, lon = row['Latitude'], row['Longitude']
+        content = "TAKE ACTION"
+        rd = data[(data['Latitude'].astype(float) == lat) & (data['Longitude'].astype(float) == lon)]
+        image_url = rd["Img"].iloc[0]
+        title = row['User Inconvinience Title']  # Assuming your DataFrame has a 'Description' column
+        # description = "My road is broken"
+        # HTML content for the popup
+        popup_content = f'''
+        <div style="text-align: center;">
+            <p style="font-size:15px;font-weight:bold">{content}</p>
+            <img src="{image_url}" style="width:100%;max-width:300px;">
+            <p>{title}</p>
+            <a href="{analysis_url}?lat={lat}&lon={lon}" target="_blank">View details</a>'
+        </div>
+        '''
+
+        # Define the custom icon
+        icon_url = 'https://static.vecteezy.com/system/resources/thumbnails/012/042/301/small_2x/warning-sign-icon-transparent-background-free-png.png'  # Replace with your icon image URL
+        icon = folium.CustomIcon(icon_url, icon_size=(30, 30))  # Adjust icon_size as needed
+        
+        # Add the marker with the custom icon and popup to the map
+        folium.Marker(
+            location=[lat, lon],
+            icon=icon,
+            popup=folium.Popup(popup_content, max_width=300)
+        ).add_to(karnataka_map)
+
+    # Save the map to an HTML file
+    map_html_path = r'static\assets\maps\inconvenience.html'
+    karnataka_map.save(map_html_path)
+    
+ 
+  return render(request, 'pages/alert.html', {'map_html_path': map_html_path})
+
+
+@login_required(login_url='/accounts/login/')
+def alert_explain(request):
+    lat = float(request.GET.get('lat'))
+    lon = float(request.GET.get('lon'))
+    id="1lfqdrcUgjA7F0id3soULQULCmF9KAIglw1wSLisGywo"
+    name="Accident"
+    url="https://docs.google.com/spreadsheets/d/{}/gviz/tq?tqx=out:csv&sheet={}".format(id,name)
+    df=pd.read_csv(url)
+    rd = df[(df['Latitude'].astype(float) == lat) & (df['Longitude'].astype(float) == lon)]
+    print(rd.iloc[0])
+#---------------------------------------------------------------------------------------------------------------------
+#"Latitude", "Longitude", "User Inconvinience Description", "Phone Number", "User Inconvinience Title", "Address", "Images"
+    context = {
+       'lat':rd["Latitude"].iloc[0],
+       'lon': rd["Longitude"].iloc[0],
+       'address': rd["Address"].iloc[0],
+       'title': rd["User Inconvinience Title"].iloc[0],
+       'desc': rd["User Inconvinience Description"].iloc[0],
+       'ts': rd["Timestamp"].iloc[0],
+       'img': rd["Img"].iloc[0],
+       'pn': rd["Phone Number"].iloc[0],
+       
+
+    }
+
+    return render(request, 'pages/alert_explain.html', {'context': context})
 
 
 
