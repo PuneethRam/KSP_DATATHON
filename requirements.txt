@@ -1,15 +1,18 @@
-django
-gunicorn
-python-dotenv
-whitenoise
-django-admin-datta==1.0.10
+django==4.2.9
+python-dotenv==1.0.1
+str2bool==1.1
 
-# psycopg2-binary
-# mysqlclient
+# UI 
+django-admin-datta==1.0.10
 
 # Tooling
 django-dynamic-datatb==1.0.25
 django-api-generator==1.0.17
-google-api-python-client
+django-debug-toolbar==4.2.0
+
+# Deployment
+whitenoise==6.6.0
+gunicorn==21.2.0
+
 folium
 pandas
